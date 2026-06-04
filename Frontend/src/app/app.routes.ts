@@ -10,6 +10,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/Auth/login.component').then((m) => m.LoginComponent)
   },
   {
+    path: 'recuperar',
+    loadComponent: () => import('./components/Auth/recuperarContrasena.component').then((m) => m.RecuperarComponent)
+  },
+  {
     path: 'register',
     loadComponent: () => import('./components/Auth/register.component').then((m) => m.RegisterComponent)
   },

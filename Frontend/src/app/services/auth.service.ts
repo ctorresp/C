@@ -24,4 +24,9 @@ export class AuthService {
     };
     return this.http.post(`${this.baseUrl}/usuarios/register`, payload);
   }
+
+  recuperarContrasena(email: string): Observable<any> {
+    // Se envía un objeto JSON con el email al endpoint del backend
+    return this.http.post(`${this.baseUrl}/usuarios/recuperar-password`, { email: email });
+  }
 }

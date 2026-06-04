@@ -30,6 +30,9 @@ import { AuthService } from '../../services/auth.service';
               <button type="submit" class="btn btn-pet w-100" [disabled]="loginForm.invalid">Ingresar</button>
             </form>
             <div class="text-center mt-3">
+              <a routerLink="/recuperar" style="color: var(--pet-brown);">Recuperar contraseña</a>
+            </div>
+            <div class="text-center mt-3">
               <a routerLink="/" style="color: var(--pet-brown);">Volver al inicio</a>
             </div>
           </div>

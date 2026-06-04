@@ -16,6 +16,9 @@ import grupoC.usuarios.dto.UsuarioResponseDto;
 import grupoC.usuarios.model.Usuario;
 import grupoC.usuarios.security.JwtTokenProvider;
 import grupoC.usuarios.service.UsuarioService;
+import grupoC.usuarios.dto.RecuperarPasswordDto;
+import java.util.Map;
+
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,6 +60,14 @@ public class UsuarioController {
         LoginResponseDto loginResponse = new LoginResponseDto(token, usuarioDto);
 
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/recuperar-password")
+    public ResponseEntity<Map<String, String>> recuperarPassword(@Valid @RequestBody RecuperarPasswordDto recuperarDto) {
+        
+        usuarioService.procesarRecuperacionPassword(recuperarDto.email());
+
+        return ResponseEntity.ok(java.util.Map.of("mensaje", "Si el correo está registrado, se han enviado las instrucciones."));
     }
 
     @GetMapping("/{uuid}")

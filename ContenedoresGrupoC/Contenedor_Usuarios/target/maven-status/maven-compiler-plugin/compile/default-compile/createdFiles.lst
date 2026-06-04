@@ -13,6 +13,7 @@ grupoC\usuarios\dto\RolUpdateDto.class
 grupoC\usuarios\UsuariosApplication.class
 grupoC\usuarios\model\Organizacion.class
 grupoC\usuarios\dto\LoginDto.class
+grupoC\usuarios\dto\RecuperarPasswordDto.class
 grupoC\usuarios\model\Usuario.class
 grupoC\usuarios\repository\UsuarioRepository.class
 grupoC\usuarios\service\UsuarioService.class

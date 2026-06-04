@@ -11,8 +11,15 @@ import { RouterLink } from '@angular/router';
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-12 col-lg-10 glass-card shadow-lg bg-white p-5">
-            <h1 class="fw-bold" style="color: var(--pet-brown);">Mis Mascotas Encontradas</h1>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h1 class="fw-bold" style="color: var(--pet-brown);">Mis Mascotas Encontradas</h1>
+              <button class="btn btn-pet" routerLink="/mascotas">Registrar nueva mascota</button>
+            </div>
+
             <p class="text-muted">Aquí puedes gestionar las mascotas que has encontrado y reportado.</p>
+
+
             <div class="mt-4">
               <!-- Aquí puedes agregar una lista de mascotas encontradas con opciones para editar o eliminar -->
                 <div class="p-4 rounded-4 mb-3 text-center" style="background-color: #fffaf0; border: 1px solid var(--pet-beige);">

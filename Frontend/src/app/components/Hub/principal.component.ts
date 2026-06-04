@@ -22,7 +22,7 @@ import { RouterLink } from '@angular/router';
               <div class="p-4 rounded-4 text-center" style="border: 1px solid #eee;">
                 <h5 class="fw-bold">Mis Mascotas Encontradas</h5>
                 <p class="small text-muted">Gestiona las mascotas que has encontrado y reportado.</p>
-                <button class="btn btn-outline-secondary w-75 rounded-pill" routerLink="/mascotas">Ver mis mascotas</button>
+                <button class="btn btn-outline-secondary w-75 rounded-pill" routerLink="/mascotasHistory">Ver mis mascotas</button>
               </div>
             </div>
           </div>

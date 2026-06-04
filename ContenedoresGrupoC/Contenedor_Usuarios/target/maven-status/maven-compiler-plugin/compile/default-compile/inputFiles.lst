@@ -3,6 +3,7 @@ C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\sr
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\controller\UsuarioController.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\LoginDto.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\LoginResponseDto.java
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\RecuperarPasswordDto.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\RegistroDto.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\RolUpdateDto.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\UsuarioResponseDto.java
