@@ -20,7 +20,7 @@ import { AuthService } from '../../services/auth.service';
             <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)">
               <div class="mb-3">
                 <label class="form-label">Nombre completo</label>
-                <input type="text" class="form-control rounded-pill" [(ngModel)]="user.name" name="name" #name="ngModel" pattern="[a-zA-Z\s]+" placeholder="Tu nombre completo" required />
+                <input type="text" class="form-control rounded-pill" [(ngModel)]="user.name" name="name" #name="ngModel" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+" placeholder="Tu nombre completo" required />
                 <div *ngIf="name.invalid && name.touched" class="text-danger small mt-1">El nombre solo puede contener letras y espacios.</div>
               </div>
               <div class="mb-3">
@@ -67,6 +67,8 @@ export class RegisterComponent {
   user = { name: '', email: '', password: '' };
   errorMessage = '';
   isLoading = false;
+
+  nombrePattern = /^[a-zA-ZÀ-ÿ\s]+$/;
 
   constructor(private authService: AuthService, private router: Router) {}
 
