@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import grupoC.motor_coincidencias.model.Coincidencia;
+import grupoC.motor_coincidencias.dto.CoincidenciaDetalleDto;
 import grupoC.motor_coincidencias.model.EstadoCoincidencia;
 import grupoC.motor_coincidencias.service.CoincidenciaService;
 
@@ -24,10 +24,10 @@ private final CoincidenciaService coincidenciaService;
         this.coincidenciaService = coincidenciaService;
     }
 
-    // Obtener todas las posibles coincidencias para un reporte específico
+    // Obtener todas las coincidencias enriquecidas (BFF) para un reporte específico
     @GetMapping("/reporte/{reporteId}")
-    public ResponseEntity<List<Coincidencia>> obtenerPorReporte(@PathVariable Long reporteId) {
-        List<Coincidencia> coincidencias = coincidenciaService.obtenerCoincidenciasPorReporte(reporteId);
+    public ResponseEntity<List<CoincidenciaDetalleDto>> obtenerPorReporte(@PathVariable Long reporteId) {
+        List<CoincidenciaDetalleDto> coincidencias = coincidenciaService.obtenerCoincidenciasEnriquecidas(reporteId);
         return ResponseEntity.ok(coincidencias);
     }
 

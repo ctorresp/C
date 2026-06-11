@@ -20,4 +20,18 @@ export class ReporteService {
   obtenerReportes(): Observable<any> {
     return this.http.get(`${this.baseUrl}/reportes`);
   }
+
+  // <-- NUEVO: Eliminar un reporte por ID (ReporteController -> @DeleteMapping)
+  eliminarReporte(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/reportes/${id}`);
+  }
+}
+
+export interface ReporteResponse {
+  id: number;
+  mascotaId: number;
+  usuarioUuid: string;
+  tipoReporte: string;
+  fechaSuceso: string;
+  estado: string;
 }

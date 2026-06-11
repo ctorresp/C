@@ -147,7 +147,12 @@ export class PrincipalComponent implements OnInit, OnDestroy {
       next: (mascotas) => {
         this.reporteService.obtenerReportes().subscribe({
           next: (reportesDB) => {
-            this.reportes = reportesDB.map((rep: any) => {
+            
+            // 1. FILTRAMOS: Solo nos interesan los reportes activos y que sean de extravío
+            const reportesPerdidas = reportesDB.filter((rep: any) => rep.estado === 'PERDIDA');
+
+            // 2. MAPEAMOS: Usamos el arreglo ya filtrado en lugar de reportesDB
+            this.reportes = reportesPerdidas.map((rep: any) => {
               const mascota = mascotas.find((m: any) => m.id === rep.mascotaId);
               return {
                 id: rep.id,
@@ -161,7 +166,7 @@ export class PrincipalComponent implements OnInit, OnDestroy {
             });
 
             this.isLoading = false;
-            this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado tras cruzar reportes y mascotas exitosamente
+            this.cdr.detectChanges(); 
 
             if (this.reportes.length > 1) {
               this.startAutoPlay();
@@ -170,18 +175,18 @@ export class PrincipalComponent implements OnInit, OnDestroy {
           error: (err) => {
             console.error('Error al cargar reportes:', err);
             this.isLoading = false;
-            this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado en error interno
+            this.cdr.detectChanges(); 
           }
         });
       },
       error: (err) => {
         console.error('Error al cargar mascotas:', err);
         this.isLoading = false;
-        this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado en error externo
+        this.cdr.detectChanges(); 
       }
     });
   }
-
+  
   startAutoPlay() { this.autoPlayInterval = setInterval(() => { this.nextSlide(); }, 5000); }
   stopAutoPlay() { if (this.autoPlayInterval) clearInterval(this.autoPlayInterval); }
   nextSlide() {

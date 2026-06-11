@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReporteService } from '../../services/reporte.service';
 import { MascotaService } from '../../services/mascota.service';
+import { CoincidenciasComponent } from '../coincidencias/coincidencias.component';
 
 interface Mascota { id: number; nombre: string; especie: string; }
 interface Reporte { id: number; mascotaId: number; tipoReporte: string; fechaSuceso: string; estado: string; nombreMascota?: string; }
@@ -10,7 +11,7 @@ interface Reporte { id: number; mascotaId: number; tipoReporte: string; fechaSuc
 @Component({
   selector: 'app-report-history',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, CoincidenciasComponent],
   template: `
     <div class="main-wrapper">
       <div class="container py-5">
@@ -42,20 +43,21 @@ interface Reporte { id: number; mascotaId: number; tipoReporte: string; fechaSuc
             </div>
             
             <div *ngIf="!isLoading && listaReportes.length > 0" class="mt-4">
-              <div class="p-4 rounded-4 mb-3 position-relative shadow-sm transition-hover" 
+              <div class="p-4 rounded-4 mb-3 shadow-sm transition-hover" 
                    *ngFor="let reporte of listaReportes"
                    style="background-color: #fffaf0; border: 1px solid var(--pet-beige);">
                 
-                <span class="badge rounded-pill position-absolute top-0 end-0 m-3 px-3 py-2 small shadow-sm"
-                      [ngClass]="{'bg-danger': reporte.estado === 'PERDIDA', 'bg-success': reporte.estado === 'ENCONTRADA'}">
-                  {{ reporte.estado === 'PERDIDA' ? 'EN BÚSQUEDA' : 'RESUELTO' }}
-                </span>
-
                 <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between">
                   <div class="mb-3 mb-md-0 pe-md-5">
-                    <h5 class="fw-bold mb-1" style="color: var(--pet-brown);">
+                    
+                    <h5 class="fw-bold mb-2 d-flex align-items-center flex-wrap gap-2" style="color: var(--pet-brown);">
                       Reporte de {{ reporte.tipoReporte | titlecase }}
+                      <span class="badge rounded-pill fw-normal fs-6 shadow-sm"
+                            [ngClass]="{'bg-danger': reporte.estado === 'PERDIDA', 'bg-success': reporte.estado === 'ENCONTRADA'}">
+                        {{ reporte.estado === 'PERDIDA' ? 'EN BÚSQUEDA' : 'RESUELTO' }}
+                      </span>
                     </h5>
+                    
                     <p class="mb-1 fw-semibold text-dark">
                       Mascota: <span class="text-primary">{{ reporte.nombreMascota || 'Cargando datos...' }}</span>
                     </p>
@@ -63,11 +65,17 @@ interface Reporte { id: number; mascotaId: number; tipoReporte: string; fechaSuc
                       📅 Fecha del suceso: <span class="fw-medium">{{ reporte.fechaSuceso | date:'dd/MM/yyyy, h:mm a' }}</span>
                     </p>
                   </div>
+                  
                   <div class="d-flex flex-column flex-sm-row gap-2">
-                    <button class="btn btn-outline-secondary px-4 rounded-pill fw-semibold" (click)="onEditar(reporte.id)">Editar</button>
                     <button class="btn btn-danger px-4 rounded-pill fw-semibold" (click)="onEliminar(reporte.id)">Eliminar</button>
                   </div>
                 </div>
+
+                <app-coincidencias 
+                  [reporteId]="reporte.id" 
+                  [tipoReporte]="reporte.tipoReporte">
+                </app-coincidencias>
+
               </div>
             </div>
 
@@ -130,10 +138,22 @@ export class ReportHistoryComponent implements OnInit {
     });
   }
 
-  onEditar(id: number): void { console.log('Editar reporte ID:', id); }
   onEliminar(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este reporte?')) {
-      console.log('Eliminar reporte ID:', id);
+      if (confirm('¿Estás seguro de que deseas eliminar este reporte? Esta acción no se puede deshacer.')) {
+        
+        // Asumo que tu servicio tiene un método llamado eliminarReporte() o deleteReporte()
+        this.reporteService.eliminarReporte(id).subscribe({
+          next: () => {
+            // Filtramos la lista para quitar el reporte que acabamos de borrar
+            this.listaReportes = this.listaReportes.filter(reporte => reporte.id !== id);
+            this.cdr.detectChanges(); // Forzamos la actualización visual
+          },
+          error: (err) => {
+            console.error('Error al eliminar reporte:', err);
+            alert('Hubo un problema al intentar eliminar el reporte.');
+          }
+        });
+        
+      }
     }
-  }
 }

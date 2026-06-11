@@ -14,9 +14,9 @@
       
       <ul class="menu-items">
         <li><a routerLink="/principal" (click)="closeMenu()">🏠 Inicio Principal</a></li>
-        <li><a routerLink="/reportar" (click)="closeMenu()">📢 Reportar Mascota</a></li>
-        <li><a routerLink="/mapa" (click)="closeMenu()">🗺️ Mapa</a></li>
-        <li><a routerLink="/historial" (click)="closeMenu()">📋 Mis Reportes</a></li>
+        <li><a routerLink="/report" (click)="closeMenu()">📢 Reportar Mascota</a></li>
+        <li><a style="cursor: pointer;" (click)="abrirMapaGlobal()">🗺️ Mapa Global</a></li>
+        <li><a routerLink="/reportHistory" (click)="closeMenu()">📋 Mis Reportes</a></li>
         <li><a routerLink="/perfil" (click)="closeMenu()">👤 Mi Perfil</a></li>
         <li class="logout-item">
           <a routerLink="/login" (click)="logout()">🚪 Cerrar Sesión</a>
@@ -30,5 +30,10 @@
   <main class="main-content" [class.shifted]="isMenuOpen && mostrarMenu">
     <router-outlet></router-outlet>
   </main>
+
+  <app-mapa-global 
+    [isOpen]="isMapaGlobalOpen" 
+    (close)="cerrarMapaGlobal()">
+  </app-mapa-global>
 
 </div>

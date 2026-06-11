@@ -65,25 +65,33 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(form: any) {
-    if (form.valid) {
-      this.isLoading = true;
-      this.errorMessage = '';
-      
-      this.authService.login(this.credentials).subscribe({
-        next: (response: any) => {
-          if(response && response.token) {
-            localStorage.setItem('token', response.token);
+      if (form.valid) {
+        this.isLoading = true;
+        this.errorMessage = '';
+        
+        this.authService.login(this.credentials).subscribe({
+          next: (response: any) => {
+            if(response && response.token) {
+              // 1. Guardamos el token
+              localStorage.setItem('token', response.token);
+              
+              // 2. Guardamos el UUID del usuario (asumiendo que viene en response.usuario)
+              // Revisa en la consola de tu navegador cómo se llama exactamente el objeto que llega del backend.
+              // Por lo general, si tu DTO en Java se llama "usuario", llegará así:
+              if (response.usuario && response.usuario.uuid) {
+                localStorage.setItem('uuid', response.usuario.uuid);
+              }
+            }
+            this.isLoading = false;
+            alert('Ingreso exitoso');
+            this.router.navigate(['/principal']); 
+          },
+          error: (error) => {
+            console.error('Error de login', error);
+            this.errorMessage = 'Credenciales incorrectas o error de conexión.';
+            this.isLoading = false;
           }
-          this.isLoading = false;
-          alert('Ingreso exitoso');
-          this.router.navigate(['/principal']); 
-        },
-        error: (error) => {
-          console.error('Error de login', error);
-          this.errorMessage = 'Credenciales incorrectas o error de conexión.';
-          this.isLoading = false;
-        }
-      });
-    }
+        });
+      }
   }
 }

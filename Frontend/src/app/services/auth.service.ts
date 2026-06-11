@@ -29,4 +29,14 @@ export class AuthService {
     // Se envía un objeto JSON con el email al endpoint del backend
     return this.http.post(`${this.baseUrl}/usuarios/recuperar-password`, { email: email });
   }
+
+  // <-- NUEVO: Obtener los datos del perfil
+  obtenerUsuario(uuid: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/usuarios/${uuid}`);
+  }
+
+  // <-- NUEVO: Eliminar la cuenta
+  eliminarCuenta(uuid: string): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/usuarios/${uuid}`);
+  }
 }

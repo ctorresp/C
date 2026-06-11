@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import grupoC.motor_coincidencias.dto.ReporteExternoDto;
 
@@ -12,5 +13,8 @@ public interface ReporteClient {
 
     @GetMapping("/reportes")
     List<ReporteExternoDto> obtenerTodos();
+
+    @GetMapping("/reportes/{id}")
+    ReporteExternoDto obtenerPorId(@PathVariable("id") Long id);
 
 }

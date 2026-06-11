@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/usuarios/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/usuarios/recuperar-password").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/usuarios/**").hasRole("ADMINISTRADOR")
+                .requestMatchers(HttpMethod.DELETE, "/usuarios/**").authenticated()
                 .requestMatchers(HttpMethod.GET, "/usuarios").hasRole("ADMINISTRADOR")
                 .requestMatchers(HttpMethod.PATCH, "/usuarios/*/rol").hasRole("ADMINISTRADOR")
                 .requestMatchers("/error").permitAll()
