@@ -1,5 +1,12 @@
 package grupoC.mascotas.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.security.Principal;
 import java.util.List;
 
@@ -20,11 +27,18 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/mascotas")
 @RequiredArgsConstructor
+@Tag(name = "Mascotas", description = "Gestión de mascotas registradas por usuarios")
 public class MascotaController {
 
 private final MascotaService mascotaService;
 
     @PostMapping
+    @Operation(summary = "Crear mascota", description = "Registra una mascota asociada al usuario autenticado")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Mascota creada correctamente", content = @Content(schema = @Schema(implementation = MascotaResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
     public ResponseEntity<MascotaResponseDTO> crearMascota(@RequestBody MascotaRequestDTO mascotaDto, Principal principal) {
         String usuarioUuid = principal.getName(); 
         MascotaResponseDTO nuevaMascota = mascotaService.registrarMascota(mascotaDto, usuarioUuid);
@@ -32,11 +46,20 @@ private final MascotaService mascotaService;
     }
 
     @GetMapping
+    @Operation(summary = "Listar mascotas", description = "Obtiene todas las mascotas registradas")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponse(responseCode = "200", description = "Listado obtenido correctamente")
     public ResponseEntity<List<MascotaResponseDTO>> obtenerMascotas() {
         return ResponseEntity.ok(mascotaService.obtenerTodas());
     }
     
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener mascota por ID", description = "Devuelve la mascota solicitada por su ID")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Mascota encontrada", content = @Content(schema = @Schema(implementation = MascotaResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Mascota no encontrada")
+    })
     public ResponseEntity<MascotaResponseDTO> obtenerMascotaPorId(@PathVariable Long id) {
         return ResponseEntity.ok(mascotaService.obtenerPorId(id));
     }
