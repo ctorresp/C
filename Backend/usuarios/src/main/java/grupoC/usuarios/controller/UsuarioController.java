@@ -1,5 +1,13 @@
 package grupoC.usuarios.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/usuarios")
+@Tag(name = "Usuarios", description = "Operaciones de registro, autenticación y administración de usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -40,6 +49,12 @@ public class UsuarioController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Registrar usuario", description = "Crea un nuevo usuario con rol inicial CIUDADANO")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Usuario registrado correctamente", content = @Content(schema = @Schema(implementation = UsuarioResponseDto.class))),
+        @ApiResponse(responseCode = "409", description = "El email ya está registrado"),
+        @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
     public ResponseEntity<UsuarioResponseDto> registrarUsuario(@Valid @RequestBody RegistroDto registroDto){
 
         Usuario nuevoUsuario = usuarioService.registrarUsuario(registroDto);
@@ -50,6 +65,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Iniciar sesión", description = "Autentica al usuario y devuelve un token JWT")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Login exitoso", content = @Content(schema = @Schema(implementation = LoginResponseDto.class))),
+        @ApiResponse(responseCode = "401", description = "Credenciales inválidas")
+    })
     public ResponseEntity<LoginResponseDto> loginUsuario(@Valid @RequestBody LoginDto loginDto){
 
         Usuario usuario = usuarioService.loginUsuario(loginDto);
@@ -63,6 +83,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/recuperar-password")
+    @Operation(summary = "Recuperar contraseña", description = "Genera una contraseña temporal y envía un correo si la cuenta existe")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Solicitud procesada correctamente"),
+        @ApiResponse(responseCode = "400", description = "Formato de correo inválido")
+    })
     public ResponseEntity<Map<String, String>> recuperarPassword(@Valid @RequestBody RecuperarPasswordDto recuperarDto) {
         
         usuarioService.procesarRecuperacionPassword(recuperarDto.email());
@@ -71,6 +96,12 @@ public class UsuarioController {
     }
 
     @GetMapping("/{uuid}")
+    @Operation(summary = "Obtener usuario por UUID", description = "Devuelve los datos públicos del usuario")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = @Content(schema = @Schema(implementation = UsuarioResponseDto.class))),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
     public ResponseEntity<UsuarioResponseDto> getUsuarioByUuid(@PathVariable String uuid){
 
         Usuario usuario = usuarioService.findByUuid(uuid);
@@ -78,6 +109,11 @@ public class UsuarioController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar usuarios", description = "Devuelve una lista paginada de usuarios")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Listado paginado obtenido correctamente")
+    })
     public ResponseEntity<Page<UsuarioResponseDto>> getAllUsuarios(@ParameterObject Pageable pageable){
 
         Page<Usuario> paginaUsuarios = usuarioService.findAll(pageable);
@@ -87,8 +123,15 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{uuid}/rol")
+    @Operation(summary = "Actualizar rol", description = "Cambia el rol del usuario indicado por UUID")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Rol actualizado correctamente", content = @Content(schema = @Schema(implementation = Usuario.class))),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado"),
+        @ApiResponse(responseCode = "400", description = "Rol no válido")
+    })
     public ResponseEntity<Usuario> actualizarRol(
-        @PathVariable String uuid,
+        @Parameter(description = "UUID del usuario", example = "550e8400-e29b-41d4-a716-446655440000") @PathVariable String uuid,
         @RequestBody RolUpdateDto dto
     ){
         Usuario usuarioActualizado = usuarioService.cambiarRol(uuid, dto.nuevoRol());
@@ -96,6 +139,11 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{uuid}")
+    @Operation(summary = "Eliminar usuario", description = "Elimina el usuario identificado por UUID")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Usuario eliminado correctamente")
+    })
     public ResponseEntity<Void> eliminarUsuario(@PathVariable String uuid){
 
         usuarioService.eliminarUsuario(uuid);
