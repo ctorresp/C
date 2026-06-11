@@ -2,11 +2,12 @@ import { Component, signal, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
+import { MapaGlobalComponent } from './components/Map/mapa-global.component'; // <-- 1. Importamos el componente del mapa
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink],
+  imports: [CommonModule, RouterOutlet, RouterLink, MapaGlobalComponent], // <-- 2. Lo agregamos a los imports de Angular
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -14,26 +15,22 @@ export class App implements OnInit {
   protected readonly title = signal('Frontend');
   
   isMenuOpen = false;
-  mostrarMenu = false; // Empezamos en falso por seguridad
-  isLoggedIn = false;  // Nueva variable para saber el estado real
+  mostrarMenu = false; 
+  isLoggedIn = false;  
+  isMapaGlobalOpen = false; // <-- 3. Nueva variable para controlar el estado del modal
 
   constructor(private router: Router) {
-    // Escuchamos los cambios de ruta
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
       
-      // 1. Verificamos si realmente hay sesión activa
       this.verificarEstadoLogin();
       
-      // 2. Definimos las rutas donde NO queremos que se vea el menú
       const rutasPublicas = ['/login', '/recuperar', '/register', '/'];
       const esRutaPublica = rutasPublicas.includes(event.urlAfterRedirects);
 
-      // 3. El menú SOLO se muestra si está logueado Y no está en la pantalla de login/registro
       this.mostrarMenu = this.isLoggedIn && !esRutaPublica;
       
-      // Extra de seguridad: Si intenta ir a una ruta privada sin estar logueado, lo pateamos al login
       if (!this.isLoggedIn && !esRutaPublica) {
         this.router.navigate(['/login']);
       }
@@ -44,10 +41,9 @@ export class App implements OnInit {
     this.verificarEstadoLogin();
   }
 
-  // Verifica si el token existe en el almacenamiento local
   verificarEstadoLogin() {
     const token = localStorage.getItem('token');
-    this.isLoggedIn = !!token; // Convierte el token a booleano (true si existe, false si es null)
+    this.isLoggedIn = !!token; 
   }
 
   toggleMenu() {
@@ -58,13 +54,24 @@ export class App implements OnInit {
     this.isMenuOpen = false;
   }
 
+  // <-- 4. Métodos para controlar el Radar de Mascotas
+  abrirMapaGlobal() {
+    this.isMapaGlobalOpen = true;
+    this.closeMenu(); // Cierra el menú de hamburguesa automáticamente al abrir el mapa
+  }
+
+  cerrarMapaGlobal() {
+    this.isMapaGlobalOpen = false;
+  }
+
   logout() {
     this.closeMenu();
-    localStorage.removeItem('token'); // Destruimos la llave de acceso
+    this.cerrarMapaGlobal(); // Por seguridad, cerramos el mapa si estaba abierto
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('uuid'); // Limpieza completa
     this.isLoggedIn = false;
     this.mostrarMenu = false;
     
-    // Lo redirigimos a la pantalla de inicio de sesión de forma segura
     this.router.navigate(['/login']);
   }
 }

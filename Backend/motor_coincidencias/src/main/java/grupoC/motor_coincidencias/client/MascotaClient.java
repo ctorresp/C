@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import grupoC.motor_coincidencias.dto.MascotaExternoDto;
 
@@ -12,5 +13,8 @@ public interface MascotaClient {
 
     @GetMapping("/mascotas")
     List<MascotaExternoDto> obtenerTodas();
+
+    @GetMapping("/mascotas/{id}")
+    MascotaExternoDto obtenerPorId(@PathVariable("id") Long id);
 
 }

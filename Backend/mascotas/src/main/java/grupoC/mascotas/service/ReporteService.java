@@ -45,4 +45,11 @@ private final ReporteRepository reporteRepository;
         );
     }
 
+    public void eliminarReporte(Long id) {
+        if (!reporteRepository.existsById(id)) {
+            throw new RuntimeException("Reporte no encontrado con ID: " + id);
+        }
+        reporteRepository.deleteById(id);
+    }
+
 }

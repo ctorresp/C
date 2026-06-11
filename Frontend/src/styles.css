@@ -1,3 +1,5 @@
+@import "leaflet/dist/leaflet.css";
+
 :root {
   --pet-beige: #f5f5dc;
   --pet-brown: #6f4e37;

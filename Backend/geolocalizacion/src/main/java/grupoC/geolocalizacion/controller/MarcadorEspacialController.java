@@ -2,7 +2,6 @@ package grupoC.geolocalizacion.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 import grupoC.geolocalizacion.dto.MarcadorRequestDTO;
 import grupoC.geolocalizacion.dto.MarcadorResponseDTO;
@@ -18,17 +19,17 @@ import grupoC.geolocalizacion.service.MarcadorEspacialService;
 
 @RestController
 @RequestMapping("/api/geolocalizacion/marcadores")
+@RequiredArgsConstructor
 public class MarcadorEspacialController {
 
-    @Autowired
-    private MarcadorEspacialService marcadorService;
+    private final MarcadorEspacialService marcadorService;
 
     // POST: Para guardar una nueva ubicación
     @PostMapping
-    public ResponseEntity<String> crearMarcador(@RequestBody MarcadorRequestDTO request) {
+    public ResponseEntity<Map<String, String>> crearMarcador(@RequestBody MarcadorRequestDTO request) {
         marcadorService.crearMarcador(request);
         // Devolvemos un mensaje simple para no exponer los datos reales creados
-        return new ResponseEntity<>("Marcador guardado exitosamente", HttpStatus.CREATED);
+        return new ResponseEntity<>(Map.of("mensaje", "Marcador guardado exitosamente"), HttpStatus.CREATED);
     }
 
     // GET: Para ver un marcador específico (Ofuscado)

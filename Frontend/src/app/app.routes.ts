@@ -38,6 +38,14 @@ export const routes: Routes = [
     loadComponent: () => import('./components/Mascotas/mascotas.component').then((m) => m.MascotasComponent)
   },
   {
+    path : 'coincidencias',
+    loadComponent: () => import('./components/coincidencias/coincidencias.component').then((m) => m.CoincidenciasComponent)
+  },
+  {
+    path : 'perfil',
+    loadComponent: () => import('./components/Auth/perfil.component').then((m) => m.PerfilComponent)
+  },
+  {
     path: '**',
     redirectTo: ''
   }

@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor; // <-- Asegúrate de importar esto
 
 import grupoC.geolocalizacion.dto.MarcadorRequestDTO;
 import grupoC.geolocalizacion.dto.MarcadorResponseDTO;
@@ -14,11 +14,11 @@ import grupoC.geolocalizacion.repository.MarcadorEspacialRepository;
 import grupoC.geolocalizacion.util.OfuscacionUbicacionUtil;
 
 @Service
+@RequiredArgsConstructor
 public class MarcadorEspacialService {
 
-    @Autowired
-    private MarcadorEspacialRepository marcadorRepository;
-
+    private final MarcadorEspacialRepository marcadorRepository;
+    
     // Guarda la ubicación REAL (Solo para la base de datos)
     public MarcadorEspacial crearMarcador(MarcadorRequestDTO request) {
         MarcadorEspacial marcador = new MarcadorEspacial();

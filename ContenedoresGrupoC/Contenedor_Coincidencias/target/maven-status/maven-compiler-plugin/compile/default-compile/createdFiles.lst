@@ -1,3 +1,4 @@
+grupoC\motor_coincidencias\dto\CoincidenciaDetalleDto.class
 grupoC\motor_coincidencias\dto\UbicacionExternoDto.class
 grupoC\motor_coincidencias\service\MotorCoincidenciasService.class
 grupoC\motor_coincidencias\config\FeignClientAuthConfig.class
