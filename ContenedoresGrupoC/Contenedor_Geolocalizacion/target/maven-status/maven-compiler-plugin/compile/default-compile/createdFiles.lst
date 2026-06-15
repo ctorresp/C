@@ -1,10 +1,11 @@
-grupoC\geolocalizacion\repository\MarcadorEspacialRepository.class
 grupoC\geolocalizacion\security\JwtTokenProvider.class
-grupoC\geolocalizacion\config\SecurityConfig.class
 grupoC\geolocalizacion\dto\MarcadorRequestDTO.class
 grupoC\geolocalizacion\GeolocalizacionApplication.class
-grupoC\geolocalizacion\util\OfuscacionUbicacionUtil.class
 grupoC\geolocalizacion\service\MarcadorEspacialService.class
+grupoC\geolocalizacion\config\OpenApiConfig.class
+grupoC\geolocalizacion\repository\MarcadorEspacialRepository.class
+grupoC\geolocalizacion\config\SecurityConfig.class
+grupoC\geolocalizacion\util\OfuscacionUbicacionUtil.class
 grupoC\geolocalizacion\model\MarcadorEspacial.class
 grupoC\geolocalizacion\security\JwtAuthenticationFilter.class
 grupoC\geolocalizacion\dto\MarcadorResponseDTO.class

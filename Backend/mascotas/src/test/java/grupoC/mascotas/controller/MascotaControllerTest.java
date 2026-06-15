@@ -39,7 +39,7 @@ public class MascotaControllerTest {
 		MascotaRequestDTO request = new MascotaRequestDTO(
 				"Firulais", "Perro", "Mestizo", 3, "Macho", "Marron", "Muy amistoso", Estado.PERDIDA);
 		MascotaResponseDTO responseDto = new MascotaResponseDTO(
-				1L, "user-123", "Firulais", "Perro", "Mestizo", 3, "Macho", "Marron", "Muy amistoso", Estado.PERDIDA);
+				1L, "user-123", "Firulais", "Perro", "Mestizo", 3, "Macho", "Marron", "Muy amistoso", Estado.PERDIDA, "http://localhost:8081/imagenes/mock.jpg");
 
 		when(principal.getName()).thenReturn("user-123");
 		when(mascotaService.registrarMascota(request, "user-123")).thenReturn(responseDto);
@@ -56,8 +56,8 @@ public class MascotaControllerTest {
 	@Test
 	void obtenerMascotasDebeRetornarListado() {
 		List<MascotaResponseDTO> mascotas = List.of(
-				new MascotaResponseDTO(1L, "user-1", "Luna", "Gato", "Siames", 2, "Hembra", "Blanco", "Calmada", Estado.ENCONTRADA),
-				new MascotaResponseDTO(2L, "user-2", "Toby", "Perro", "Caniche", 4, "Macho", "Negro", "Jugueton", Estado.PERDIDA));
+				new MascotaResponseDTO(1L, "user-1", "Luna", "Gato", "Siames", 2, "Hembra", "Blanco", "Calmada", Estado.ENCONTRADA, "http://localhost:8081/imagenes/mock.jpg"),
+				new MascotaResponseDTO(2L, "user-2", "Toby", "Perro", "Caniche", 4, "Macho", "Negro", "Jugueton", Estado.PERDIDA, "http://localhost:8081/imagenes/mock.jpg"));
 		when(mascotaService.obtenerTodas()).thenReturn(mascotas);
 
 		ResponseEntity<List<MascotaResponseDTO>> response = mascotaController.obtenerMascotas();
@@ -71,7 +71,7 @@ public class MascotaControllerTest {
 	@Test
 	void obtenerMascotaPorIdDebeRetornarMascota() {
 		MascotaResponseDTO dto = new MascotaResponseDTO(
-				5L, "user-xyz", "Rocky", "Perro", "Boxer", 6, "Macho", "Atigrado", "Activo", Estado.ENCONTRADA);
+				5L, "user-xyz", "Rocky", "Perro", "Boxer", 6, "Macho", "Atigrado", "Activo", Estado.ENCONTRADA, "http://localhost:8081/imagenes/mock.jpg");
 		when(mascotaService.obtenerPorId(5L)).thenReturn(dto);
 
 		ResponseEntity<MascotaResponseDTO> response = mascotaController.obtenerMascotaPorId(5L);

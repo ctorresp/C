@@ -5,6 +5,7 @@ grupoC\motor_coincidencias\config\FeignClientAuthConfig.class
 grupoC\motor_coincidencias\service\MotorCoincidenciasService$1.class
 grupoC\motor_coincidencias\client\ReporteClient.class
 grupoC\motor_coincidencias\service\MotorCoincidenciasService$2.class
+grupoC\motor_coincidencias\config\OpenApiConfig.class
 grupoC\motor_coincidencias\controller\CoincidenciaController.class
 grupoC\motor_coincidencias\model\Coincidencia.class
 grupoC\motor_coincidencias\dto\MascotaExternoDto.class

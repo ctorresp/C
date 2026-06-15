@@ -14,7 +14,6 @@ public class ReportePerdidaFactory implements ReporteFactoryStrategy{
     @Override
     public Reporte armarReporte(ReporteRequestDTO dto, String usuarioUuid) {
         Reporte reporte = new Reporte();
-        reporte.setMascotaId(dto.mascotaId());
         reporte.setUsuarioUuid(usuarioUuid);
         reporte.setEstado(Estado.PERDIDA);
         reporte.setFechaSuceso(LocalDateTime.now());

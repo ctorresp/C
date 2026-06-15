@@ -152,18 +152,30 @@ export class PrincipalComponent implements OnInit, OnDestroy {
             const reportesPerdidas = reportesDB.filter((rep: any) => rep.estado === 'PERDIDA');
 
             // 2. MAPEAMOS: Usamos el arreglo ya filtrado en lugar de reportesDB
-            this.reportes = reportesPerdidas.map((rep: any) => {
-              const mascota = mascotas.find((m: any) => m.id === rep.mascotaId);
-              return {
-                id: rep.id,
-                nombre: mascota ? mascota.nombre : 'Mascota Desconocida',
-                tipo: mascota ? mascota.especie : 'No especificado',
-                estado: rep.estado, 
-                zona: 'Zona no registrada',
-                fecha: rep.fechaSuceso,
-                foto: mascota?.fotoUrl || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=500'
-              };
-            });
+            // 2. MAPEAMOS Y FILTRAMOS HUÉRFANOS
+            this.reportes = reportesPerdidas
+              .map((rep: any) => {
+                const mascota = mascotas.find((m: any) => m.id === rep.mascotaId);
+                
+                // Si la mascota ya no existe, retornamos null
+                if (!mascota) return null; 
+                
+                const urlFoto = (mascota && mascota.fotoUrl) 
+                  ? mascota.fotoUrl 
+                  : 'https://plus.unsplash.com/premium_photo-1694819488591-a43907d1c5cc?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y3V0ZSUyMGRvZ3xlbnwwfHwwfHx8MA%3D%3D';
+
+                return {
+                  id: rep.id,
+                  nombre: mascota.nombre,
+                  tipo: mascota.especie,
+                  estado: rep.estado, 
+                  zona: 'Zona no registrada',
+                  fecha: rep.fechaSuceso,
+                  foto: urlFoto 
+                };
+              })
+              // Filtramos para quitar todos los 'null' generados por mascotas borradas
+              .filter((rep: any) => rep !== null);
 
             this.isLoading = false;
             this.cdr.detectChanges(); 

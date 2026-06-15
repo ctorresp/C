@@ -1,3 +1,7 @@
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\client\GeolocalizacionClient.java
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\config\FeignClientAuthConfig.java
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\config\FeignConfig.java
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\config\OpenApiConfig.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\config\SecurityConfig.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\config\WebMvcConfig.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\controller\ImagenMascotaController.java
@@ -19,6 +23,7 @@ C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\sr
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\repository\ImagenMascotaRepository.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\repository\MascotaRepository.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\repository\ReporteRepository.java
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\security\FeignAuthRequestInterceptor.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\security\JwtAuthenticationFilter.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\security\JwtTokenProvider.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\mascotas\src\main\java\grupoC\mascotas\service\ImagenMascotaService.java

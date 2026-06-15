@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { EditarMascotaComponent } from './components/Mascotas/editarMascota.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,10 @@ export const routes: Routes = [
   {
     path: 'mascotas',
     loadComponent: () => import('./components/Mascotas/registroMascotas.component').then((m) => m.RegistroMascotasComponent)
+  },
+  {
+    path: 'editar/:id',
+    component: EditarMascotaComponent
   },
   {
     path: 'principal',
