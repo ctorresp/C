@@ -30,4 +30,16 @@ export class MascotaService {
   obtenerMascotas(): Observable<any> {
     return this.http.get(`${this.baseUrl}/mascotas`);
   }
+
+  obtenerMascotaPorId(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/mascotas/${id}`);
+  }
+
+  actualizarMascota(id: number, mascota: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/mascotas/${id}`, mascota);
+  }
+
+  eliminarMascota(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/mascotas/${id}`);
+  }
 }

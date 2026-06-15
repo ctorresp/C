@@ -1,2 +1,6 @@
+grupoC\mascotas\controller\MascotaControllerTest.class
+grupoC\mascotas\service\ReporteServiceTest.class
+grupoC\mascotas\controller\ReporteControllerTest.class
 grupoC\mascotas\DatabaseConnectionTest.class
 grupoC\mascotas\MascotasApplicationTests.class
+grupoC\mascotas\service\MascotaServiceTest.class

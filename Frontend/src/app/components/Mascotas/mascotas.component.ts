@@ -1,6 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- CAMBIO: Importamos ChangeDetectorRef
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router'; // <-- Añadimos Router
 import { MascotaService } from '../../services/mascota.service';
 
 interface Mascota {
@@ -52,24 +52,34 @@ interface Mascota {
 
             <div *ngIf="!isLoading && listaMascotas.length > 0" class="row row-cols-1 row-cols-md-2 g-4 mt-2">
               <div class="col" *ngFor="let mascota of listaMascotas">
-                <div class="p-4 rounded-4 h-100 shadow-sm d-flex flex-column justify-content-between position-relative" 
+                <div class="rounded-4 h-100 shadow-sm d-flex flex-column position-relative overflow-hidden" 
                      style="background-color: #fffaf0; border: 1px solid var(--pet-beige, #e9ecef);">
-                  <div>
-                    <span class="badge rounded-pill bg-success position-absolute top-0 end-0 m-3 px-3 py-2 small shadow-sm">
-                      {{ mascota.estado }}
-                    </span>
-                    <h4 class="fw-bold mb-2" style="color: var(--pet-brown); padding-right: 90px;">{{ mascota.nombre }}</h4>
-                    <div class="d-flex flex-wrap gap-2 mb-3">
-                      <span class="badge bg-white text-dark border rounded-pill px-3">{{ mascota.especie }}</span>
-                      <span class="badge bg-white text-dark border rounded-pill px-3">{{ mascota.raza }}</span>
-                      <span class="badge bg-white text-dark border rounded-pill px-3">{{ mascota.edad }} {{ mascota.edad === 1 ? 'año' : 'años' }}</span>
+                  
+                  <img [src]="mascota.fotoUrl || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1'" 
+                       alt="Foto de {{ mascota.nombre }}" 
+                       class="w-100" style="height: 220px; object-fit: cover;">
+
+                  <span class="badge rounded-pill bg-success position-absolute top-0 end-0 m-3 px-3 py-2 small shadow-sm">
+                    {{ mascota.estado }}
+                  </span>
+
+                  <div class="p-4 d-flex flex-column grow justify-content-between">
+                    <div>
+                      <h4 class="fw-bold mb-2" style="color: var(--pet-brown);">{{ mascota.nombre }}</h4>
+                      <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-white text-dark border rounded-pill px-3">{{ mascota.especie }}</span>
+                        <span class="badge bg-white text-dark border rounded-pill px-3">{{ mascota.raza }}</span>
+                        <span class="badge bg-white text-dark border rounded-pill px-3">{{ mascota.edad }} {{ mascota.edad === 1 ? 'año' : 'años' }}</span>
+                      </div>
+                      <p class="text-secondary small mb-3 text-truncate-3">{{ mascota.descripcion }}</p>
                     </div>
-                    <p class="text-secondary small mb-3 text-truncate-3">{{ mascota.descripcion }}</p>
+                    
+                    <div class="d-flex gap-2 mt-3">
+                      <button class="btn btn-outline-secondary w-50 rounded-pill fw-semibold" (click)="onEditar(mascota.id)">Editar ✏️</button>
+                      <button class="btn btn-danger w-50 rounded-pill fw-semibold" (click)="onEliminar(mascota.id)">Eliminar 🗑️</button>
+                    </div>
                   </div>
-                  <div class="d-flex gap-2 mt-3">
-                    <button class="btn btn-outline-secondary w-50 rounded-pill fw-semibold" (click)="onEditar(mascota.id)">Editar ✏️</button>
-                    <button class="btn btn-danger w-50 rounded-pill fw-semibold" (click)="onEliminar(mascota.id)">Eliminar 🗑️</button>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -92,10 +102,10 @@ export class MascotasComponent implements OnInit {
   listaMascotas: Mascota[] = [];
   isLoading = true;
 
-  // <-- CAMBIO: Inyectamos el constructor con ChangeDetectorRef
   constructor(
     private mascotaService: MascotaService,
-    private cdr: ChangeDetectorRef 
+    private cdr: ChangeDetectorRef,
+    private router: Router // <-- Inyectamos el Router
   ) {}
 
   ngOnInit(): void {
@@ -108,21 +118,35 @@ export class MascotasComponent implements OnInit {
       next: (data: Mascota[]) => {
         this.listaMascotas = data;
         this.isLoading = false;
-        this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado al recibir datos exitosos
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error al traer el listado de mascotas:', err);
         this.isLoading = false;
-        this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado en caso de error
-        alert('No se pudo cargar el historial de mascotas. Verifica la conexión con el servidor.');
+        this.cdr.detectChanges();
+        alert('No se pudo cargar el historial de mascotas.');
       }
     });
   }
 
-  onEditar(id: number): void { console.log('Redirigir a editar mascota con ID:', id); }
+  onEditar(id: number): void { 
+    this.router.navigate(['/editar', id]); 
+  }
+
   onEliminar(id: number): void {
     if (confirm('¿Estás seguro de que deseas eliminar esta mascota del sistema?')) {
-      console.log('Eliminar mascota con ID:', id);
+      this.mascotaService.eliminarMascota(id).subscribe({
+        next: () => {
+          // Si se elimina con éxito, la sacamos de la lista sin recargar la página
+          this.listaMascotas = this.listaMascotas.filter(m => m.id !== id);
+          this.cdr.detectChanges();
+          alert('Mascota eliminada con éxito.');
+        },
+        error: (err) => {
+          console.error('Error al eliminar mascota:', err);
+          alert('Hubo un error al intentar eliminar la mascota.');
+        }
+      });
     }
   }
 }

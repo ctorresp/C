@@ -1,3 +1,4 @@
+grupoC\mascotas\config\FeignConfig.class
 grupoC\mascotas\dto\ReporteResponseDTO.class
 grupoC\mascotas\model\Estado.class
 grupoC\mascotas\config\WebMvcConfig.class
@@ -11,11 +12,15 @@ grupoC\mascotas\service\MascotaService.class
 grupoC\mascotas\repository\MascotaRepository.class
 grupoC\mascotas\factory\ReporteEncontradaFactory.class
 grupoC\mascotas\security\JwtTokenProvider.class
+grupoC\mascotas\config\FeignClientAuthConfig.class
 grupoC\mascotas\controller\ImagenMascotaController.class
 grupoC\mascotas\dto\ReporteRequestDTO.class
+grupoC\mascotas\client\GeolocalizacionClient.class
+grupoC\mascotas\config\OpenApiConfig.class
 grupoC\mascotas\service\ReporteService.class
 grupoC\mascotas\model\Reporte.class
 grupoC\mascotas\security\JwtAuthenticationFilter.class
+grupoC\mascotas\security\FeignAuthRequestInterceptor.class
 grupoC\mascotas\controller\MascotaController.class
 grupoC\mascotas\model\Mascota.class
 grupoC\mascotas\repository\ImagenMascotaRepository.class

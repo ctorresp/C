@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import grupoC.mascotas.dto.MascotaRequestDTO;
 import grupoC.mascotas.dto.MascotaResponseDTO;
@@ -62,6 +64,30 @@ private final MascotaService mascotaService;
     })
     public ResponseEntity<MascotaResponseDTO> obtenerMascotaPorId(@PathVariable Long id) {
         return ResponseEntity.ok(mascotaService.obtenerPorId(id));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar mascota", description = "Actualiza los datos de una mascota existente")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Mascota actualizada correctamente", content = @Content(schema = @Schema(implementation = MascotaResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Mascota no encontrada")
+    })
+    public ResponseEntity<MascotaResponseDTO> actualizarMascota(@PathVariable Long id, @RequestBody MascotaRequestDTO mascotaDto) {
+        MascotaResponseDTO mascotaActualizada = mascotaService.actualizarMascota(id, mascotaDto);
+        return ResponseEntity.ok(mascotaActualizada);
+    }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar mascota", description = "Elimina una mascota del sistema por su ID")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Mascota eliminada correctamente"),
+        @ApiResponse(responseCode = "404", description = "Mascota no encontrada")
+    })
+    public ResponseEntity<Void> eliminarMascota(@PathVariable Long id) {
+        mascotaService.eliminarMascota(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

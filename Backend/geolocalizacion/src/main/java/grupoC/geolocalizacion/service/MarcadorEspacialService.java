@@ -60,4 +60,14 @@ public class MarcadorEspacialService {
         );
     }
 
+    public void eliminarMarcadorPorReporte(Long reporteId) {
+        marcadorRepository.deleteByReporteId(reporteId);
+    }
+
+    public void eliminarMarcadoresEnLote(List<Long> reporteIds) {
+        if (reporteIds != null && !reporteIds.isEmpty()) {
+            marcadorRepository.deleteByReporteIdIn(reporteIds);
+        }
+    }
+
 }

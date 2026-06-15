@@ -112,15 +112,23 @@ export class ReportHistoryComponent implements OnInit {
         
         this.reporteService.obtenerReportes().subscribe({
           next: (reportesData: Reporte[]) => {
-            this.listaReportes = reportesData.map(reporte => {
-              const mascotaEncontrada = this.misMascotas.find(m => m.id === reporte.mascotaId);
-              return {
-                ...reporte,
-                nombreMascota: mascotaEncontrada ? mascotaEncontrada.nombre : 'Mascota Desconocida'
-              };
-            });
+            this.listaReportes = reportesData
+              .map(reporte => {
+                const mascotaEncontrada = this.misMascotas.find(m => m.id === reporte.mascotaId);
+                
+                // Si no hay mascota, retornamos null
+                if (!mascotaEncontrada) return null;
+
+                return {
+                  ...reporte,
+                  nombreMascota: mascotaEncontrada.nombre
+                };
+              })
+              // Filtramos los reportes nulos
+              .filter(reporte => reporte !== null) as Reporte[]; // Casteamos para TypeScript
+
             this.isLoading = false;
-            this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado al cruzar datos exitosamente
+            this.cdr.detectChanges(); 
           },
           error: (err) => {
             console.error('Error al cargar reportes:', err);

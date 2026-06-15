@@ -1,5 +1,8 @@
 package grupoC.mascotas.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -57,5 +60,8 @@ public class Mascota {
     @Column(nullable = false)
     @Schema(description = "Estado de la mascota")
     private Estado estado;
+
+    @OneToMany(mappedBy = "mascota", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Reporte> reportes = new ArrayList<>();
 
 }

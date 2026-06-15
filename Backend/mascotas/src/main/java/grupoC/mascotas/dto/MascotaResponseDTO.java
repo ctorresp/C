@@ -23,7 +23,9 @@ public record MascotaResponseDTO(
         @Schema(description = "Descripción", example = "Tiene collar rojo")
         String descripcion,
         @Schema(description = "Estado del caso", example = "PERDIDA")
-        Estado estado
+        Estado estado,
+        @Schema(description = "URL de la foto principal", example = "http://localhost:8081/imagenes/abcd.jpg")
+        String fotoUrl
 ) {
 
 }
