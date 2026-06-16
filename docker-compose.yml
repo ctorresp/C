@@ -55,6 +55,7 @@ services:
       - DB_PASSWORD=stefy
       # Pasamos la misma clave secreta para que pueda validar los tokens que generó el ms-usuarios
       - JWT_SECRET=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE=
+      - GEOLOCALIZACION_API_URL=http://api-geolocalizacion:8082
     volumes:
       - ./uploads/imagenes:/app/uploads/imagenes # Montamos el código para desarrollo en caliente
 

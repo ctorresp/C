@@ -1,17 +1,18 @@
-# Usamos Java 22 para que coincida con tu pom.xml
-FROM eclipse-temurin:22-jre
-
+# ETAPA 1: Construcción (Compila el código fuente)
+FROM maven:3.9.6-eclipse-temurin-22 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Usamos los comandos estándar de Linux (groupadd y useradd) en lugar de addgroup
+# ETAPA 2: Ejecución (Crea la imagen ligera)
+FROM eclipse-temurin:22-jre
+WORKDIR /app
 RUN groupadd -r spring && useradd -r -g spring spring
 USER spring
 
-# El nombre del JAR debe coincidir con el artifactId y version de tu pom.xml
-COPY target/motor_coincidencias-0.0.1-SNAPSHOT.jar app.jar
+# Copia el .jar que se acaba de fabricar en la ETAPA 1
+COPY --from=build /app/target/*-SNAPSHOT.jar app.jar
 
-EXPOSE 8083
-
+EXPOSE 8083 
 ENTRYPOINT ["java", "-jar", "app.jar"]
-
-# Comentario para poder realizar un commit en GitHub
