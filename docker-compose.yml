@@ -4,14 +4,16 @@ services:
   # 1. Contenedor de la Base de Datos Global
   mysql-db:
     build:
-      context: ./Db  # Apunta a la carpeta donde está tu Dockerfile de MySQL y el init.sql
-    container_name: sanos_salvos_db
+      context: ./Db
+    container_name: sanos_salvos_db_grupoc # <-- Nombre único
     ports:
-      - "3307:3306"
+      - "3333:3306" # <-- Puerto externo único (3333)
     environment:
       MYSQL_ROOT_PASSWORD: stefy
     volumes:
-      - mysql_data:/var/lib/mysql # Guarda los datos para que no se borren si apagas el contenedor
+      - mysql_data_grupoc:/var/lib/mysql # <-- Volumen único
+    networks:
+      - red_grupoc # <-- Red aislada
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pstefy"]
       timeout: 20s
@@ -20,29 +22,31 @@ services:
   # 2. Contenedor del Microservicio de Usuarios
   usuarios-api:
     build:
-      context: ./Backend/usuarios # Apunta a la carpeta de tu API
-    container_name: api-usuarios
+      context: ./Backend/usuarios
+    container_name: api-usuarios-grupoc # <-- Nombre único
     ports:
-      - "8080:8080"
+      - "8380:8080" # <-- Puerto externo único (8380)
     depends_on:
       mysql-db:
-        condition: service_healthy # Espera a que MySQL esté 100% listo antes de encender Spring Boot
+        condition: service_healthy
     environment:
-      - DB_HOST=mysql-db # ¡Magia de Docker! Usa el nombre del contenedor como IP
+      - DB_HOST=mysql-db 
       - DB_PORT=3306
       - DB_NAME=usuariosdb
       - DB_USER=root
       - DB_PASSWORD=stefy
       - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE=
       - JWT_EXPIRATION_MS=86400000
+    networks:
+      - red_grupoc # <-- Red aislada
 
-  # 3. Contenedor del Microservicio de Mascotas (¡NUEVO!)
+  # 3. Contenedor del Microservicio de Mascotas
   mascotas-api:
     build:
-      context: ./Backend/mascotas # Asegúrate de que esta ruta apunte a la carpeta de mascotas
-    container_name: api-mascotas
+      context: ./Backend/mascotas
+    container_name: api-mascotas-grupoc # <-- Nombre único
     ports:
-      - "8081:8081" # Usamos el puerto 8081 para no chocar con usuarios
+      - "8381:8081" # <-- Puerto externo único (8381)
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -53,19 +57,20 @@ services:
       - DB_NAME=mascotasdb
       - DB_USER=root
       - DB_PASSWORD=stefy
-      # Pasamos la misma clave secreta para que pueda validar los tokens que generó el ms-usuarios
       - JWT_SECRET=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE=
-      - GEOLOCALIZACION_API_URL=http://api-geolocalizacion:8082
+      - GEOLOCALIZACION_API_URL=http://geolocalizacion-api:8082 # Usa el nombre del servicio
     volumes:
-      - ./uploads/imagenes:/app/uploads/imagenes # Montamos el código para desarrollo en caliente
+      - ./uploads/imagenes:/app/uploads/imagenes
+    networks:
+      - red_grupoc # <-- Red aislada
 
-# 4. Microservicio Geolocalización (¡NUEVO!)
+  # 4. Microservicio Geolocalización
   geolocalizacion-api:
     build:
-      context: ./Backend/geolocalizacion # Ruta a la carpeta de este microservicio
-    container_name: api-geolocalizacion
+      context: ./Backend/geolocalizacion
+    container_name: api-geolocalizacion-grupoc # <-- Nombre único
     ports:
-      - "8082:8082"
+      - "8382:8082" # <-- Puerto externo único (8382)
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -76,14 +81,17 @@ services:
       - DB_NAME=geolocalizaciondb
       - DB_USER=root
       - DB_PASSWORD=stefy
-      - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE= # <- ¡AÑADIR ESTO!
-# 5. Microservicio Motor de Coincidencias (¡NUEVO!)
+      - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE=
+    networks:
+      - red_grupoc # <-- Red aislada
+
+  # 5. Microservicio Motor de Coincidencias
   coincidencias-api:
     build:
-      context: ./Backend/motor_coincidencias # Asegúrate de que el nombre de la carpeta coincida
-    container_name: api-coincidencias
+      context: ./Backend/motor_coincidencias
+    container_name: api-coincidencias-grupoc # <-- Nombre único
     ports:
-      - "8083:8083" # El puerto que definiste en tu application.properties
+      - "8383:8083" # <-- Puerto externo único (8383)
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -93,8 +101,16 @@ services:
       - DB_NAME=coincidenciasdb
       - DB_USER=root
       - DB_PASSWORD=stefy
-      - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE= # Adaptarlo a JWT_SECRET o JWT_SECRET_KEY según tu application.properties
-      - MASCOTAS_API_URL=http://api-mascotas:8081
-      - GEOLOCALIZACION_API_URL=http://api-geolocalizacion:8082
+      - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE=
+      - MASCOTAS_API_URL=http://mascotas-api:8081 # Usa el nombre del servicio
+      - GEOLOCALIZACION_API_URL=http://geolocalizacion-api:8082 # Usa el nombre del servicio
+    networks:
+      - red_grupoc # <-- Red aislada
+
+# Declaración de recursos compartidos (solo para este grupo)
 volumes:
-  mysql_data:
+  mysql_data_grupoc:
+
+networks:
+  red_grupoc:
+    driver: bridge
