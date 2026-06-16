@@ -28,8 +28,8 @@ interface Mascota {
 
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
               <div>
-                <h1 class="fw-bold mb-1" style="color: var(--pet-brown);">Mis Mascotas Encontradas</h1>
-                <p class="text-muted m-0">Aquí puedes gestionar las mascotas que has encontrado y reportado en el sistema.</p>
+                <h1 class="fw-bold mb-1" style="color: var(--pet-brown);">Mis Mascotas</h1>
+                <p class="text-muted m-0">Aquí puedes gestionar tus mascotas registradas en el sistema.</p>
               </div>
               <button class="btn btn-pet align-self-start align-self-md-center px-4 rounded-pill fw-bold" routerLink="/mascotas">
                 Registrar nueva mascota 🐾
@@ -47,7 +47,7 @@ interface Mascota {
 
             <div *ngIf="!isLoading && listaMascotas.length === 0" class="text-center py-5">
               <h5 class="fw-bold text-secondary">Aún no tienes mascotas registradas</h5>
-              <p class="small text-muted">Cuando registres una mascota encontrada, aparecerá en este listado.</p>
+              <p class="small text-muted">Añade a tus peludos para mantenerlos seguros en nuestro sistema.</p>
             </div>
 
             <div *ngIf="!isLoading && listaMascotas.length > 0" class="row row-cols-1 row-cols-md-2 g-4 mt-2">
@@ -59,8 +59,9 @@ interface Mascota {
                        alt="Foto de {{ mascota.nombre }}" 
                        class="w-100" style="height: 220px; object-fit: cover;">
 
-                  <span class="badge rounded-pill bg-success position-absolute top-0 end-0 m-3 px-3 py-2 small shadow-sm">
-                    {{ mascota.estado }}
+                  <span *ngIf="mascota.estado === 'PERDIDA'" 
+                        class="badge rounded-pill bg-danger position-absolute top-0 end-0 m-3 px-3 py-2 small shadow-sm">
+                    ⚠️ {{ mascota.estado }}
                   </span>
 
                   <div class="p-4 d-flex flex-column grow justify-content-between">

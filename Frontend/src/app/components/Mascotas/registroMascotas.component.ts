@@ -123,7 +123,7 @@ export class RegistroMascotasComponent {
           next: () => {
             this.isLoading = false;
             alert('¡Mascota registrada con éxito!');
-            this.router.navigate(['/mascotas']); // Redirigimos a la lista
+            this.router.navigate(['/mascotasHistory']); // Redirigimos a la lista
           },
           error: (err) => {
             this.isLoading = false;

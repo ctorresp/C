@@ -66,4 +66,11 @@ private final ReporteService reporteService;
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/{id}")
+    @Operation(summary = "Obtener reporte por ID", description = "Devuelve los detalles de un reporte específico")
+    @SecurityRequirement(name = "bearerAuth") // Mantenlo si usas seguridad en este endpoint
+    public ResponseEntity<ReporteResponseDTO> obtenerPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(reporteService.obtenerPorId(id));
+    }
+
 }

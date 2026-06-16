@@ -13,6 +13,7 @@ import grupoC.mascotas.model.Mascota;
 import grupoC.mascotas.model.Reporte;
 import grupoC.mascotas.repository.ImagenMascotaRepository;
 import grupoC.mascotas.repository.MascotaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -78,6 +79,7 @@ public class MascotaService {
         return mapToDto(mascotaActualizada);
     }
 
+    @Transactional
     public void eliminarMascota(Long id) {
         // En lugar de usar existsById, recuperamos la mascota con sus reportes cargados
         Mascota mascota = mascotaRepository.findById(id)
@@ -100,6 +102,14 @@ public class MascotaService {
         // 3. Eliminamos la mascota. 
         // El cascade = CascadeType.ALL se encargará de borrar los reportes de la tabla local.
         mascotaRepository.delete(mascota);
+    }
+
+    @Transactional
+    public void actualizarEstadoMascota(Long id, grupoC.mascotas.model.Estado nuevoEstado) {
+        Mascota mascota = mascotaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Mascota no encontrada con id: " + id));
+        mascota.setEstado(nuevoEstado);
+        mascotaRepository.save(mascota);
     }
 
     private MascotaResponseDTO mapToDto(Mascota mascota) {
