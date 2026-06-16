@@ -20,6 +20,14 @@ interface ReporteMascota {
   imports: [CommonModule, RouterLink],
   template: `
     <div class="main-wrapper">
+      <nav class="navbar navbar-light bg-light fixed-top">
+        <div class="container-fluid px-3 py-3 d-flex justify-content-end">
+          <form class="d-flex" role="search" style="max-width: 420px; width: 100%;">
+            <input class="form-control me-2 rounded-pill" type="search" placeholder="Buscar mascota por nombre" aria-label="Buscar mascota">
+            <button class="btn btn-outline-success rounded-pill px-4" type="submit">Buscar</button>
+          </form>
+        </div> 
+      </nav>
       <div class="container py-4">
         <div class="row justify-content-center">
           <div class="col-12 col-lg-10 glass-card shadow-lg bg-white p-4 p-md-5 rounded-4">
