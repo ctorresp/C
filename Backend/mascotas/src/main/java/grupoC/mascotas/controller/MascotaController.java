@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -76,6 +77,14 @@ private final MascotaService mascotaService;
     public ResponseEntity<MascotaResponseDTO> actualizarMascota(@PathVariable Long id, @RequestBody MascotaRequestDTO mascotaDto) {
         MascotaResponseDTO mascotaActualizada = mascotaService.actualizarMascota(id, mascotaDto);
         return ResponseEntity.ok(mascotaActualizada);
+    }
+
+    @PutMapping("/{id}/estado")
+    @Operation(summary = "Cambiar estado de mascota", description = "Actualiza únicamente el estado (ENCONTRADA/PERDIDA) de la mascota")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<Void> actualizarEstadoMascota(@PathVariable Long id, @RequestParam grupoC.mascotas.model.Estado estado) {
+        mascotaService.actualizarEstadoMascota(id, estado);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

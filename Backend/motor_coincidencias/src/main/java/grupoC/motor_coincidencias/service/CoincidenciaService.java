@@ -89,5 +89,26 @@ public class CoincidenciaService {
         
         coincidencia.setEstado(nuevoEstado);
         repository.save(coincidencia);
+
+        // Si el dueño confirma que encontró a su mascota, actualizamos la mascota original y limpiamos
+        if (nuevoEstado == EstadoCoincidencia.EXITOSA) {
+            try {
+                // 1. Buscamos el reporte perdido para saber cuál es la mascota asociada
+                ReporteExternoDto repPerdido = reporteClient.obtenerPorId(coincidencia.getReportePerdidoId());
+                
+                // 2. Le avisamos al MS de Mascotas que la mascota ya está a salvo
+                mascotaClient.actualizarEstadoMascota(repPerdido.getMascotaId(), "ENCONTRADA");
+                System.out.println("Éxito: Mascota " + repPerdido.getMascotaId() + " actualizada a ENCONTRADA.");
+
+                // 👇 3. NUEVO: Borramos los reportes asociados porque ya no son necesarios
+                reporteClient.eliminarReporte(coincidencia.getReportePerdidoId());
+                reporteClient.eliminarReporte(coincidencia.getReporteEncontradoId());
+                System.out.println("Éxito: Reportes limpiados correctamente.");
+
+            } catch (Exception e) {
+                // Logueamos en caso de que el otro microservicio falle o no esté disponible
+                System.err.println("No se pudo completar el flujo de éxito de la coincidencia: " + e.getMessage());
+            }
+        }
     }
 }

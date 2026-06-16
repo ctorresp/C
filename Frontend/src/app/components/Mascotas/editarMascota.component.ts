@@ -155,6 +155,6 @@ export class EditarMascotaComponent implements OnInit {
   finalizarGuardado() {
     this.isSaving = false;
     alert('¡Mascota actualizada con éxito!');
-    this.router.navigate(['/mascotas']);
+    this.router.navigate(['/mascotasHistory']);
   }
 }

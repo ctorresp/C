@@ -3,6 +3,7 @@ package grupoC.motor_coincidencias.client;
 import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -16,5 +17,8 @@ public interface ReporteClient {
 
     @GetMapping("/reportes/{id}")
     ReporteExternoDto obtenerPorId(@PathVariable("id") Long id);
+
+    @DeleteMapping("/reportes/{id}")
+    void eliminarReporte(@PathVariable("id") Long id);
 
 }
