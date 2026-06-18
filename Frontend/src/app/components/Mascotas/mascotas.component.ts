@@ -5,6 +5,7 @@ import { MascotaService } from '../../services/mascota.service';
 
 interface Mascota {
   id: number;
+  usuarioUuid?: string;
   nombre: string;
   especie: string;
   raza: string;
@@ -57,7 +58,7 @@ interface Mascota {
                   
                   <img [src]="mascota.fotoUrl || 'https://images.unsplash.com/photo-1543466835-00a7907e9de1'" 
                        alt="Foto de {{ mascota.nombre }}" 
-                       class="w-100" style="height: 220px; object-fit: cover;">
+                       class="w-100" style="aspect-ratio: 4/3; object-fit: cover; object-position: center; display: block;">
 
                   <span *ngIf="mascota.estado === 'PERDIDA'" 
                         class="badge rounded-pill bg-danger position-absolute top-0 end-0 m-3 px-3 py-2 small shadow-sm">
@@ -115,9 +116,11 @@ export class MascotasComponent implements OnInit {
 
   cargarMascotas(): void {
     this.isLoading = true;
+    const currentUserUuid = localStorage.getItem('uuid');
+
     this.mascotaService.obtenerMascotas().subscribe({
       next: (data: Mascota[]) => {
-        this.listaMascotas = data;
+        this.listaMascotas = data.filter(m => m.usuarioUuid === currentUserUuid);
         this.isLoading = false;
         this.cdr.detectChanges();
       },

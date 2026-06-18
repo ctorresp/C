@@ -122,8 +122,8 @@ interface ReporteMascota {
     @media (min-width: 992px) { .carousel-card-wrapper { flex: 0 0 33.333%; } }
     .pet-card { border-radius: 20px !important; background-color: #ffffff; border: 1px solid #f8f9fa; transition: transform 0.3s ease, box-shadow 0.3s ease; }
     .pet-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(139, 90, 43, 0.12) !important; }
-    .card-img-container { border-top-left-radius: 20px; border-top-right-radius: 20px; height: 170px; }
-    .pet-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .card-img-container { border-top-left-radius: 20px; border-top-right-radius: 20px; width: 100%; background-color: #f8f9fa; }
+    .pet-image { width: 100%; aspect-ratio: 4/3; object-fit: cover; object-position: center; transition: transform 0.5s ease; display: block; }
     .pet-card:hover .pet-image { transform: scale(1.05); }
     .btn-outline-brown { color: #8B5A2B; border-color: #8B5A2B; width: 40px; height: 40px; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
     .btn-outline-brown:hover { background-color: #8B5A2B; color: white; }

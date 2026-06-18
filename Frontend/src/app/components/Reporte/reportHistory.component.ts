@@ -6,7 +6,7 @@ import { MascotaService } from '../../services/mascota.service';
 import { CoincidenciasComponent } from '../coincidencias/coincidencias.component';
 
 interface Mascota { id: number; nombre: string; especie: string; }
-interface Reporte { id: number; mascotaId: number; tipoReporte: string; fechaSuceso: string; estado: string; nombreMascota?: string; }
+interface Reporte { id: number; mascotaId: number; usuarioUuid?: string; tipoReporte: string; fechaSuceso: string; estado: string; nombreMascota?: string; }
 
 @Component({
   selector: 'app-report-history',
@@ -105,18 +105,19 @@ export class ReportHistoryComponent implements OnInit {
 
   cargarDatos(): void {
     this.isLoading = true;
+    const currentUserUuid = localStorage.getItem('uuid');
 
     this.mascotaService.obtenerMascotas().subscribe({
       next: (mascotasData) => {
         this.misMascotas = mascotasData;
         
         this.reporteService.obtenerReportes().subscribe({
-          next: (reportesData: Reporte[]) => {
+          next: (reportesData: any[]) => {
             this.listaReportes = reportesData
+              .filter(reporte => reporte.usuarioUuid === currentUserUuid)
               .map(reporte => {
                 const mascotaEncontrada = this.misMascotas.find(m => m.id === reporte.mascotaId);
                 
-                // Si no hay mascota, retornamos null
                 if (!mascotaEncontrada) return null;
 
                 return {
@@ -124,8 +125,7 @@ export class ReportHistoryComponent implements OnInit {
                   nombreMascota: mascotaEncontrada.nombre
                 };
               })
-              // Filtramos los reportes nulos
-              .filter(reporte => reporte !== null) as Reporte[]; // Casteamos para TypeScript
+              .filter(reporte => reporte !== null) as Reporte[];
 
             this.isLoading = false;
             this.cdr.detectChanges(); 
@@ -133,7 +133,7 @@ export class ReportHistoryComponent implements OnInit {
           error: (err) => {
             console.error('Error al cargar reportes:', err);
             this.isLoading = false;
-            this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado en error interno
+            this.cdr.detectChanges(); 
             alert('No se pudieron cargar tus reportes.');
           }
         });
@@ -141,7 +141,7 @@ export class ReportHistoryComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar mascotas para el cruce de datos:', err);
         this.isLoading = false;
-        this.cdr.detectChanges(); // <-- CAMBIO: Forzar renderizado en error externo
+        this.cdr.detectChanges(); 
       }
     });
   }
@@ -149,12 +149,10 @@ export class ReportHistoryComponent implements OnInit {
   onEliminar(id: number): void {
       if (confirm('¿Estás seguro de que deseas eliminar este reporte? Esta acción no se puede deshacer.')) {
         
-        // Asumo que tu servicio tiene un método llamado eliminarReporte() o deleteReporte()
         this.reporteService.eliminarReporte(id).subscribe({
           next: () => {
-            // Filtramos la lista para quitar el reporte que acabamos de borrar
             this.listaReportes = this.listaReportes.filter(reporte => reporte.id !== id);
-            this.cdr.detectChanges(); // Forzamos la actualización visual
+            this.cdr.detectChanges();
           },
           error: (err) => {
             console.error('Error al eliminar reporte:', err);
