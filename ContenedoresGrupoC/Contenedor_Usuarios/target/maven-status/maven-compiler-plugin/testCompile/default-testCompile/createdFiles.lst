@@ -1,1 +1,3 @@
 grupoC\usuarios\UsuariosApplicationTests.class
+grupoC\usuarios\controller\UsuarioControllerTest.class
+grupoC\usuarios\service\UsuarioServiceTest.class

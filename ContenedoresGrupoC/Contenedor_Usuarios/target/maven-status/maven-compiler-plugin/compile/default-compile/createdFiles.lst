@@ -11,10 +11,12 @@ grupoC\usuarios\security\JwtTokenProvider.class
 grupoC\usuarios\exception\UsuarioNotFoundException.class
 grupoC\usuarios\dto\RolUpdateDto.class
 grupoC\usuarios\UsuariosApplication.class
+grupoC\usuarios\config\OpenApiConfig.class
 grupoC\usuarios\model\Organizacion.class
 grupoC\usuarios\dto\LoginDto.class
 grupoC\usuarios\dto\RecuperarPasswordDto.class
 grupoC\usuarios\model\Usuario.class
+grupoC\usuarios\dto\CambioPasswordDto.class
 grupoC\usuarios\repository\UsuarioRepository.class
 grupoC\usuarios\service\UsuarioService.class
 grupoC\usuarios\dto\LoginResponseDto.class

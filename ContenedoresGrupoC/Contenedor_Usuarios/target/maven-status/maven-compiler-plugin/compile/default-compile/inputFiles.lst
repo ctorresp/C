@@ -1,6 +1,8 @@
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\config\DataInitializer.java
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\config\OpenApiConfig.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\config\SecurityConfig.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\controller\UsuarioController.java
+C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\CambioPasswordDto.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\LoginDto.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\LoginResponseDto.java
 C:\Users\ale\Desktop\Ingeniería\FullStack 3\Proyecto_GrupoC\Backend\usuarios\src\main\java\grupoC\usuarios\dto\RecuperarPasswordDto.java

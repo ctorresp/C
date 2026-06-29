@@ -139,6 +139,22 @@ public class UsuarioService {
     }
 
     @Transactional
+    public void actualizarContrasena(String uuid, grupoC.usuarios.dto.CambioPasswordDto dto) {
+        Usuario usuario = usuarioRepository.findByUuid(uuid)
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuario con UUID " + uuid + " no encontrado"));
+
+        // Verificamos que la contraseña actual ingresada coincida con la de la BD
+        if (!passwordEncoder.matches(dto.currentPassword(), usuario.getPasswordHash())) {
+            throw new BadCredentialsException("La contraseña actual proporcionada es incorrecta.");
+        }
+
+        // Si coincide, encriptamos la nueva y la guardamos
+        String nuevoHash = passwordEncoder.encode(dto.newPassword());
+        usuario.setPasswordHash(nuevoHash);
+        usuarioRepository.save(usuario);
+    }
+
+    @Transactional
     public void eliminarUsuario(String uuid) {
         usuarioRepository.deleteByUuid(uuid);
     }

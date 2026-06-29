@@ -20,14 +20,15 @@ interface ReporteMascota {
   imports: [CommonModule, RouterLink],
   template: `
     <div class="main-wrapper">
-      <nav class="navbar navbar-light bg-light fixed-top">
-        <div class="container-fluid px-3 py-3 d-flex justify-content-end">
-          <form class="d-flex" role="search" style="max-width: 420px; width: 100%;">
-            <input class="form-control me-2 rounded-pill" type="search" placeholder="Buscar mascota por nombre" aria-label="Buscar mascota">
-            <button class="btn btn-outline-success rounded-pill px-4" type="submit">Buscar</button>
+      <nav class="navbar navbar-light bg-light fixed-top top-navbar-custom">
+        <div class="container-fluid py-2">
+          <form class="d-flex search-form ms-auto" role="search">
+            <input class="form-control me-2 rounded-pill search-input" type="search" placeholder="Buscar mascota" aria-label="Buscar mascota">
+            <button class="btn btn-outline-success rounded-pill px-3 search-btn" type="submit">Buscar</button>
           </form>
         </div> 
       </nav>
+
       <div class="container py-4">
         <div class="row justify-content-center">
           <div class="col-12 col-lg-10 glass-card shadow-lg bg-white p-4 p-md-5 rounded-4">
@@ -130,6 +131,32 @@ interface ReporteMascota {
     .btn-brown { background-color: #8B5A2B; color: white; border: none; }
     .btn-pet-sm { background-color: #fffaf0; color: #8B5A2B; border: 1px solid var(--pet-beige, #8B5A2B); font-weight: 600; font-size: 13px; transition: all 0.2s; }
     .btn-pet-sm:hover { background-color: #8B5A2B; color: white; }
+    .top-navbar-custom {
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    }
+    
+    .search-form {
+      width: 100%;
+      max-width: 400px; /* Tamaño normal en PC */
+    }
+
+    /* Magia Responsive para celulares (pantallas menores a 768px) */
+    @media (max-width: 768px) {
+      .top-navbar-custom {
+        padding-left: 70px !important; /* Espacio vital para que no choque con el botón hamburguesa */
+      }
+      .search-form {
+        max-width: 240px; /* Reducimos drásticamente lo largo de la barra en móvil */
+      }
+      .search-input {
+        font-size: 0.85rem; /* Texto un poquito más pequeño */
+        padding-left: 15px;
+      }
+      .search-btn {
+        font-size: 0.85rem;
+        padding: 0.25rem 0.6rem !important; /* Botón más delgado */
+      }
+    }
   `]
 })
 export class PrincipalComponent implements OnInit, OnDestroy {

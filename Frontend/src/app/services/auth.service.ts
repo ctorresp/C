@@ -30,9 +30,13 @@ export class AuthService {
     return this.http.post(`${this.baseUrl}/usuarios/recuperar-password`, { email: email });
   }
 
-  // <-- NUEVO: Obtener los datos del perfil
   obtenerUsuario(uuid: string): Observable<any> {
     return this.http.get(`${this.baseUrl}/usuarios/${uuid}`);
+  }
+
+  actualizarContrasena(uuid: string, passwords: any): Observable<any> {
+    // passwords debe ser un objeto con { currentPassword: '...', newPassword: '...' }
+    return this.http.put(`${this.baseUrl}/usuarios/${uuid}/password`, passwords);
   }
 
   // <-- NUEVO: Eliminar la cuenta

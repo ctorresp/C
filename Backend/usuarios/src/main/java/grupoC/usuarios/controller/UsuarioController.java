@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -136,6 +137,24 @@ public class UsuarioController {
     ){
         Usuario usuarioActualizado = usuarioService.cambiarRol(uuid, dto.nuevoRol());
         return ResponseEntity.ok(usuarioActualizado);
+    }
+
+    @PutMapping("/{uuid}/password")
+    @Operation(summary = "Actualizar contraseña", description = "Permite a un usuario cambiar su contraseña actual validando la anterior")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Contraseña actualizada correctamente"),
+        @ApiResponse(responseCode = "401", description = "La contraseña actual es incorrecta"),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
+    public ResponseEntity<Void> actualizarContrasena(
+            @Parameter(description = "UUID del usuario", example = "550e8400-e29b-41d4-a716-446655440000") 
+            @PathVariable String uuid,
+            @Valid @RequestBody grupoC.usuarios.dto.CambioPasswordDto dto
+    ) {
+        usuarioService.actualizarContrasena(uuid, dto);
+        
+        return ResponseEntity.noContent().build(); 
     }
 
     @DeleteMapping("/{uuid}")
