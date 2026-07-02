@@ -80,6 +80,12 @@ interface Mascota {
                       <button class="btn btn-outline-secondary w-50 rounded-pill fw-semibold" (click)="onEditar(mascota.id)">Editar ✏️</button>
                       <button class="btn btn-danger w-50 rounded-pill fw-semibold" (click)="onEliminar(mascota.id)">Eliminar 🗑️</button>
                     </div>
+
+                    <button class="btn btn-warning w-100 mt-2 rounded-pill fw-bold text-dark shadow-sm" 
+                            *ngIf="mascota.estado !== 'PERDIDA'"
+                            [routerLink]="['/report']" [queryParams]="{ mascotaId: mascota.id }">
+                      Reportar Extravío 🚨
+                    </button>
                   </div>
 
                 </div>
@@ -120,7 +126,10 @@ export class MascotasComponent implements OnInit {
 
     this.mascotaService.obtenerMascotas().subscribe({
       next: (data: Mascota[]) => {
-        this.listaMascotas = data.filter(m => m.usuarioUuid === currentUserUuid);
+        this.listaMascotas = data.filter(m => 
+          m.usuarioUuid === currentUserUuid && 
+          m.nombre !== 'Peludito Encontrado'
+        );
         this.isLoading = false;
         this.cdr.detectChanges();
       },

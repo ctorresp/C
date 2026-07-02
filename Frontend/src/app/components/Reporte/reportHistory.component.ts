@@ -149,17 +149,31 @@ export class ReportHistoryComponent implements OnInit {
   onEliminar(id: number): void {
       if (confirm('¿Estás seguro de que deseas eliminar este reporte? Esta acción no se puede deshacer.')) {
         
+        // 1. Buscamos la info del reporte ANTES de borrarlo
+        const reporteTarget = this.listaReportes.find(r => r.id === id);
+
+        // 2. Ejecutamos el borrado
         this.reporteService.eliminarReporte(id).subscribe({
           next: () => {
             this.listaReportes = this.listaReportes.filter(reporte => reporte.id !== id);
             this.cdr.detectChanges();
+
+            // 3. MAGIA: Si el reporte era "ENCONTRADA" y la mascota era temporal, la borramos también de la tabla `mascotas`
+            if (reporteTarget && 
+                reporteTarget.tipoReporte === 'ENCONTRADA' && 
+                reporteTarget.nombreMascota === 'Peludito Encontrado') {
+              
+              this.mascotaService.eliminarMascota(reporteTarget.mascotaId).subscribe({
+                next: () => console.log('Mascota temporal limpiada de la base de datos.'),
+                error: (err) => console.error('No se pudo limpiar la mascota temporal', err)
+              });
+            }
           },
           error: (err) => {
             console.error('Error al eliminar reporte:', err);
             alert('Hubo un problema al intentar eliminar el reporte.');
           }
         });
-        
       }
     }
 }

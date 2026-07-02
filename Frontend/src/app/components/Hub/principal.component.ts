@@ -95,9 +95,21 @@ interface ReporteMascota {
                           <p class="card-text text-secondary mb-1 small">📍 Comunidad Sanos y Salvos</p>
                           <p class="card-text text-muted" style="font-size: 11px;">🕒 {{ reporte.fecha | date:'dd/MM/yyyy, h:mm a' }}</p>
                         </div>
-                        <button class="btn btn-pet-sm w-100 mt-3 rounded-pill" [routerLink]="['/reportes', reporte.id]">
+
+
+                      <div class="d-flex flex-column gap-2 mt-3">
+                        <button class="btn btn-pet-sm w-100 rounded-pill" [routerLink]="['/reportes', reporte.id]">
                           Ver detalles 🐾
                         </button>
+                        <button *ngIf="reporte.estado === 'PERDIDA'" 
+                                class="btn btn-success w-100 rounded-pill text-white fw-semibold" 
+                                style="font-size: 13px;" 
+                                [routerLink]="['/report']" [queryParams]="{ action: 'found' }">
+                          ¡Creo que lo vi! 👁️
+                        </button>
+                      </div>
+
+
                       </div>
                     </div>
                   </div>

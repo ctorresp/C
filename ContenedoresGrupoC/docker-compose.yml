@@ -9,40 +9,45 @@ services:
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: stefy
+      # Leerá la contraseña desde tu archivo .env
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - mysql_data:/var/lib/mysql # Guarda los datos para que no se borren si apagas el contenedor
+      - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pstefy"]
+      # Reemplazamos la contraseña hardcodeada aquí también
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p${DB_PASSWORD}"]
       timeout: 20s
       retries: 10
 
   # 2. Contenedor del Microservicio de Usuarios
   usuarios-api:
     build:
-      context: ./Contenedor_Usuarios # Apunta a la carpeta de tu API
+      context: ./Contenedor_Usuarios 
     container_name: api-usuarios
     ports:
       - "8080:8080"
     depends_on:
       mysql-db:
-        condition: service_healthy # Espera a que MySQL esté 100% listo antes de encender Spring Boot
+        condition: service_healthy 
     environment:
-      - DB_HOST=mysql-db # ¡Magia de Docker! Usa el nombre del contenedor como IP
+      - DB_HOST=mysql-db 
       - DB_PORT=3306
       - DB_NAME=usuariosdb
-      - DB_USER=root
-      - DB_PASSWORD=stefy
-      - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE=
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET}
       - JWT_EXPIRATION_MS=86400000
+      # NUEVO: Agregamos las variables de correo ocultas
+      - MAIL_USER=${MAIL_USER}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
 
-  # 3. Contenedor del Microservicio de Mascotas (¡NUEVO!)
+  # 3. Contenedor del Microservicio de Mascotas
   mascotas-api:
     build:
-      context: ./Contenedor_Mascotas # Asegúrate de que esta ruta apunte a la carpeta de mascotas
+      context: ./Contenedor_Mascotas 
     container_name: api-mascotas
     ports:
-      - "8081:8081" # Usamos el puerto 8081 para no chocar con usuarios
+      - "8081:8081" 
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -51,18 +56,17 @@ services:
       - DB_HOST=mysql-db 
       - DB_PORT=3306
       - DB_NAME=mascotasdb
-      - DB_USER=root
-      - DB_PASSWORD=stefy
-      # Pasamos la misma clave secreta para que pueda validar los tokens que generó el ms-usuarios
-      - JWT_SECRET=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE=
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
       - GEOLOCALIZACION_API_URL=http://api-geolocalizacion:8082
     volumes:
-      - ./uploads/imagenes:/app/uploads/imagenes # Montamos el código para desarrollo en caliente
+      - ./uploads/imagenes:/app/uploads/imagenes 
 
-# 4. Microservicio Geolocalización (¡NUEVO!)
+  # 4. Microservicio Geolocalización
   geolocalizacion-api:
     build:
-      context: ./Contenedor_Geolocalizacion # Ruta a la carpeta de este microservicio
+      context: ./Contenedor_Geolocalizacion 
     container_name: api-geolocalizacion
     ports:
       - "8082:8082"
@@ -74,16 +78,17 @@ services:
       - DB_HOST=mysql-db
       - DB_PORT=3306
       - DB_NAME=geolocalizaciondb
-      - DB_USER=root
-      - DB_PASSWORD=stefy
-      - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE= # <- ¡AÑADIR ESTO!
-# 5. Microservicio Motor de Coincidencias (¡NUEVO!)
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET} 
+
+  # 5. Microservicio Motor de Coincidencias
   coincidencias-api:
     build:
-      context: ./Contenedor_Coincidencias # Asegúrate de que el nombre de la carpeta coincida
+      context: ./Contenedor_Coincidencias 
     container_name: api-coincidencias
     ports:
-      - "8083:8083" # El puerto que definiste en tu application.properties
+      - "8083:8083" 
     depends_on:
       mysql-db:
         condition: service_healthy
@@ -91,10 +96,11 @@ services:
       - DB_HOST=mysql-db
       - DB_PORT=3306
       - DB_NAME=coincidenciasdb
-      - DB_USER=root
-      - DB_PASSWORD=stefy
-      - JWT_SECRET_KEY=UHJveWVjdG9HcnVwb0NTYW5vc1lTYWx2b3NTZWNyZXRLZXkyMDI2ISE= # Adaptarlo a JWT_SECRET o JWT_SECRET_KEY según tu application.properties
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - JWT_SECRET_KEY=${JWT_SECRET}
       - MASCOTAS_API_URL=http://api-mascotas:8081
       - GEOLOCALIZACION_API_URL=http://api-geolocalizacion:8082
+
 volumes:
   mysql_data:

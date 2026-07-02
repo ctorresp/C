@@ -16,6 +16,11 @@ import grupoC.mascotas.repository.MascotaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.IOException;
+
 @Service
 @RequiredArgsConstructor
 public class MascotaService {
@@ -81,16 +86,13 @@ public class MascotaService {
 
     @Transactional
     public void eliminarMascota(Long id) {
-        // En lugar de usar existsById, recuperamos la mascota con sus reportes cargados
         Mascota mascota = mascotaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Mascota no encontrada con id: " + id));
 
-        // 1. Extraemos todos los IDs de los reportes asociados a esta mascota antes de borrarla
         List<Long> reporteIds = mascota.getReportes().stream()
                 .map(Reporte::getId)
                 .collect(Collectors.toList());
 
-        // 2. Si tenía reportes activos, disparamos la petición Feign en lote para limpiar el mapa
         if (!reporteIds.isEmpty()) {
             try {
                 geolocalizacionClient.eliminarMarcadoresEnLote(reporteIds);
@@ -99,8 +101,27 @@ public class MascotaService {
             }
         }
 
-        // 3. Eliminamos la mascota. 
-        // El cascade = CascadeType.ALL se encargará de borrar los reportes de la tabla local.
+        List<ImagenMascota> imagenes = imagenRepository.findByMascotaId(id);
+        
+        for (ImagenMascota img : imagenes) {
+            if (img.getUrl() != null && !img.getUrl().isEmpty()) {
+                try {
+                    String fileName = img.getUrl().substring(img.getUrl().lastIndexOf("/") + 1);
+                    
+                    Path filePath = Paths.get("/app/uploads/imagenes/").resolve(fileName).normalize();
+                    
+                    boolean borrado = Files.deleteIfExists(filePath);
+                    if (borrado) {
+                        System.out.println("Imagen física eliminada exitosamente: " + fileName);
+                    }
+                } catch (IOException e) {
+                    System.err.println("Advertencia: No se pudo eliminar la imagen del servidor: " + e.getMessage());
+                }
+            }
+        }
+        
+        imagenRepository.deleteAll(imagenes);
+
         mascotaRepository.delete(mascota);
     }
 

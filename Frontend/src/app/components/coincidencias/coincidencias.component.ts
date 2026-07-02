@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CoincidenciaService } from '../../services/coincidencia.service';
+import { MascotaService } from '../../services/mascota.service'; 
 import { CoincidenciaDetalle } from '../../models/coincidencia.model'; 
 
 @Component({
@@ -46,12 +47,13 @@ import { CoincidenciaDetalle } from '../../models/coincidencia.model';
           </div>
 
           <div class="card-footer bg-transparent border-top-0 pb-4 text-center">
-            <div class="d-flex justify-content-center gap-3 mt-2">
-              <button class="btn btn-outline-danger px-4 rounded-pill fw-bold" (click)="tomarDecision(match.id, 'DESCARTADA')">
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-2">
+              <button class="btn btn-outline-danger px-4 py-2 rounded-pill fw-bold w-100" (click)="tomarDecision(match.id, 'DESCARTADA')">
                 <i class="bi bi-x-circle"></i> Descartar
               </button>
               
-              <button *ngIf="tipoReporte === 'PERDIDA'" class="btn btn-success px-4 rounded-pill fw-bold shadow-sm" (click)="tomarDecision(match.id, 'EXITOSA')">
+              <button *ngIf="tipoReporte === 'PERDIDA'" class="btn btn-success px-4 py-2 rounded-pill fw-bold shadow-sm w-100" 
+                      (click)="tomarDecision(match.id, 'EXITOSA', match.mascotaEncontrada?.id)">
                 <i class="bi bi-check-circle"></i> ¡Es mi mascota!
               </button>
             </div>
@@ -70,13 +72,14 @@ import { CoincidenciaDetalle } from '../../models/coincidencia.model';
 })
 export class CoincidenciasComponent implements OnInit, OnChanges {
   @Input() reporteId!: number; 
-  @Input() tipoReporte!: string; // <-- NUEVO: Recibimos el tipo de reporte
+  @Input() tipoReporte!: string; 
   
   matches: CoincidenciaDetalle[] = [];
   cargando = true;
 
   constructor(
     private coincidenciaService: CoincidenciaService,
+    private mascotaService: MascotaService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -108,12 +111,16 @@ export class CoincidenciasComponent implements OnInit, OnChanges {
     });
   }
 
-  tomarDecision(matchId: number, decision: 'EXITOSA' | 'DESCARTADA'): void {
+  tomarDecision(matchId: number, decision: 'EXITOSA' | 'DESCARTADA', mascotaTempId?: number): void {
     this.coincidenciaService.actualizarEstadoCoincidencia(matchId, decision).subscribe({
       next: () => {
-        // Al filtrar el arreglo, si queda en 0, el *ngIf del HTML oculta todo automáticamente
         this.matches = this.matches.filter(m => m.id !== matchId);
         this.cdr.detectChanges();
+        
+        if (decision === 'EXITOSA' && mascotaTempId) {
+          this.mascotaService.eliminarMascota(mascotaTempId).subscribe();
+        }
+
         alert(decision === 'EXITOSA' ? '¡Qué alegría! Hemos notificado a la otra parte.' : 'Coincidencia descartada.');
       },
       error: (err) => {
